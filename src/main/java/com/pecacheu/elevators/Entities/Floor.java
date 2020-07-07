@@ -23,7 +23,7 @@ public class Floor {
 
     public static Floor getFloor(Block b, Elevator parent) {
         World world=b.getWorld(); int bX=b.getX(), h=b.getY()-2, bZ=b.getZ(); Material fType=world.getBlockAt(bX, h, bZ).getType();
-        if(Conf.BLOCKS.indexOf(fType.toString()) == -1 || world.getBlockAt(bX, h+1, bZ).getType() != Conf.AIR) { Conf.err("getFloor", "No valid block type found!"); return null; }
+        if(!Conf.BLOCKS.contains(fType.toString()) || world.getBlockAt(bX, h+1, bZ).getType() != Conf.AIR) { Conf.err("getFloor", "No valid block type found!"); return null; }
 
         int xP=1, xN=1, zP=1, zN=1; BlockFace f=((WallSign)b.getBlockData()).getFacing();
         if(f !=  BlockFace.WEST) while(xP <= Conf.RADIUS_MAX) { if(world.getBlockAt(bX+xP, h, bZ).getType() != fType) break; xP++; }
@@ -86,9 +86,10 @@ public class Floor {
     public void removeFallingBlocks() {
         int yMin = elev.yMin(), yMax = elev.yMax();
         Object[] el = world.getEntitiesByClass(org.bukkit.entity.FallingBlock.class).toArray();
-        for(int i=0,l=el.length; i<l; i++) { Location loc = ((Entity)el[i]).getLocation();
-            if((loc.getX() >= xMin-0.5 && loc.getX() <= xMax+0.5) && (loc.getY() >= yMin-0.5 && loc.getY
-                    () <= yMax+0.5) && (loc.getZ() >= zMin-0.5 && loc.getZ() <= zMax+0.5)) ((Entity)el[i]).remove();
+        for (Object o : el) {
+            Location loc = ((Entity) o).getLocation();
+            if ((loc.getX() >= xMin - 0.5 && loc.getX() <= xMax + 0.5) && (loc.getY() >= yMin - 0.5 && loc.getY
+                    () <= yMax + 0.5) && (loc.getZ() >= zMin - 0.5 && loc.getZ() <= zMax + 0.5)) ((Entity) o).remove();
         }
     }
 }
