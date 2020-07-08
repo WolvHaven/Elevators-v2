@@ -296,7 +296,7 @@ public class Main extends JavaPlugin implements Listener {
         // If the block that's right clicked is a wall sign.
         if (act == Action.RIGHT_CLICK_BLOCK && Objects.requireNonNull(e.getClickedBlock()).getBlockData()
                 instanceof WallSign) {
-            if(Conf.isElevSign(e.getClickedBlock(), ref, e.getPlayer(), PERM_USE) && !((Elevator)ref.data).floor.moving) { //Select Floor:
+            if (Conf.isElevSign(e.getClickedBlock(), ref, e.getPlayer(), PERM_USE) && !((Elevator)ref.data).floor.moving) { //Select Floor:
                 Elevator elev = ((Elevator)ref.data); ChuList<Block> dsList = elev.sGroups.get(0);
                 LAST_ELEV = elev;
 
@@ -327,8 +327,16 @@ public class Main extends JavaPlugin implements Listener {
                 } else elev.doorTimer(sLevel+2); //Re-open doors if already on level.
 
                 e.setCancelled(true);
-            }} else if((act == Action.RIGHT_CLICK_BLOCK || act == Action.LEFT_CLICK_AIR) && Conf.isElevPlayer(e.getPlayer(), ref, PERM_USE) //Goto Floor:
-                && (e.getItem() == null || e.getPlayer().isSneaking()) && !((Elevator)ref.data).floor.moving) {
+            }
+        }
+        // If the block that's left clicked is a wall sign.
+        // or if user right clicking block or left clicking air.
+        else if (((act == Action.LEFT_CLICK_BLOCK && Objects.requireNonNull(e.getClickedBlock()).getBlockData()
+                instanceof WallSign) || act == Action.RIGHT_CLICK_BLOCK || act == Action.LEFT_CLICK_AIR)
+                && Conf.isElevPlayer(e.getPlayer(), ref, PERM_USE) //Goto Floor:
+                && (e.getItem() == null || e.getPlayer().isSneaking())  // and if user holds an item or is sneaking.
+                // Ensure lift ain't moving
+                && !((Elevator)ref.data).floor.moving) {
             Elevator elev = ((Elevator)ref.data); ChuList<Block> dsList = elev.sGroups.get(0);
 
             //Get Current And Selected Floors:
@@ -343,8 +351,8 @@ public class Main extends JavaPlugin implements Listener {
             //Reset Passenger Gravity:
             elev.setEntities(true, fLevel, false);
 
-            //Move Elevator:
-            if(act != Action.LEFT_CLICK_AIR) {
+            // Move Elevator:
+            if (act != Action.LEFT_CLICK_AIR) {
                 if(fLevel != sLevel) {
                     e.getPlayer().sendMessage(Conf.MSG_GOTO_ST+selName+Conf.MSG_GOTO_END);
                     int speed = Conf.BL_SPEED.get(Conf.BLOCKS.indexOf(elev.floor.fType.toString()));
