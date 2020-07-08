@@ -136,8 +136,10 @@ public class Main extends JavaPlugin implements Listener {
                     elev.sGroups.push(sList); setTimeout(() -> { Conf.saveConfig(); }, 200); return; //Add new signs to elevator and save.
                 }
             } else { //New elevator:
-                Floor fl = Floor.getFloor(block, null); if(fl==null) {
-                    e.setLine(0, Conf.ERROR); Conf.err("onSignChange:ElevSign:NewElev", "Floor not found!"); return;
+                Floor fl = Floor.getFloor(block, null);
+                if (fl == null) {
+                    e.setLine(0, Conf.ERROR);
+                    Conf.err("onSignChange:ElevSign:NewElev", "Floor not found!"); return;
                 }
                 String eID = Conf.locToString(new Location(fl.world, fl.xMin, 0, fl.zMin));
                 elev = new Elevator(fl, null, null); fl.elev = elev; ind = -1;

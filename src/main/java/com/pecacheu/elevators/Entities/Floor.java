@@ -22,8 +22,14 @@ public class Floor {
     }
 
     public static Floor getFloor(Block b, Elevator parent) {
-        World world=b.getWorld(); int bX=b.getX(), h=b.getY()-2, bZ=b.getZ(); Material fType=world.getBlockAt(bX, h, bZ).getType();
-        if(!Conf.BLOCKS.contains(fType.toString()) || world.getBlockAt(bX, h+1, bZ).getType() != Conf.AIR) { Conf.err("getFloor", "No valid block type found!"); return null; }
+        World world = b.getWorld(); // Get the current world of the block
+        int bX=b.getX(), h=b.getY()-2, bZ=b.getZ(); // Obtain the floor's coordinates
+        Material fType = world.getBlockAt(bX, h, bZ).getType(); // Obtain the floor's material
+
+        if (!Conf.BLOCKS.contains(fType.toString()) || world.getBlockAt(bX, h+1, bZ).getType() != Conf.AIR) {
+            Conf.err("getFloor", "No valid block type found!");
+            return null;
+        }
 
         int xP=1, xN=1, zP=1, zN=1; BlockFace f=((WallSign)b.getBlockData()).getFacing();
         if(f !=  BlockFace.WEST) while(xP <= Conf.RADIUS_MAX) { if(world.getBlockAt(bX+xP, h, bZ).getType() != fType) break; xP++; }

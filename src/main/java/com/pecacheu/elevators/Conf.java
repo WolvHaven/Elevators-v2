@@ -36,7 +36,8 @@ public class Conf {
 
     //Global Config Settings:
     public static String TITLE, CALL, ERROR, L_ST, L_END, NODOOR, MSG_GOTO_ST, MSG_GOTO_END, MSG_CALL, NOMV, M_ATLV, ATLV,
-            C_UP, UP, C_DOWN, DOWN; public static int RADIUS_MAX, MOVE_RES, DOOR_HOLD, SAVE_INT; public static ChuList<String> BLOCKS;
+            C_UP, UP, C_DOWN, DOWN; public static int RADIUS_MAX, MOVE_RES, DOOR_HOLD, SAVE_INT;
+            public static ChuList<String> BLOCKS;
     public static ChuList<Integer> BL_SPEED; public static Material DOOR_SET; public static boolean DEBUG = false;
 
     //Constants:
