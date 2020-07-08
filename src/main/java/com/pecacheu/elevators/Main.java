@@ -191,18 +191,25 @@ public class Main extends JavaPlugin implements Listener {
     //------------------- Elevator Destroy Sign/Block Events -------------------
 
     @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
-    public void onBlockPhysics(BlockPhysicsEvent e) { synchronized(Conf.API_SYNC) {
-        Block b = e.getBlock(); if(b.getBlockData() instanceof WallSign) {
-            if(Conf.CALL.equals(Conf.lines(b)[0]) || Conf.TITLE.equals(Conf.lines(b)[0])) {
-                Conf.addSignBlock(b); e.setCancelled(true); Conf.dbg("CancelSignBreak"); //Prevent sign break.
-                //TODO Keep same block behind sign somehow???
+    public void onBlockPhysics(BlockPhysicsEvent e) {
+        synchronized(Conf.API_SYNC) {
+            Block b = e.getBlock();
+            if (b.getBlockData() instanceof WallSign) {
+                if (Conf.CALL.equals(Conf.lines(b)[0]) || Conf.TITLE.equals(Conf.lines(b)[0])) {
+                    Conf.addSignBlock(b);
+                    e.setCancelled(true);
+                    Conf.dbg("CancelSignBreak"); //Prevent sign break.
+                    //TODO Keep same block behind sign somehow???
+                }
             }
         }
-    }}
+    }
 
+    // When a block gets destroyed (Not being destroyed, i'm specific here.)
     @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
     public void onBlockBreak(BlockBreakEvent e) { synchronized(Conf.API_SYNC) {
-        Block b = e.getBlock(); if(b.getBlockData() instanceof WallSign) {
+        Block b = e.getBlock();
+        if (b.getBlockData() instanceof WallSign) {
             if(Conf.CALL.equals(Conf.lines(b)[0])) onDestroyCallSign(e, e.getPlayer(), b); //Call Sign
             else if(Conf.TITLE.equals(Conf.lines(b)[0])) onDestroyElevSign(e, e.getPlayer(), b); //Elevator Sign
         } else if(Elevator.fromElevBlock(b) != null) { //Block Door:
@@ -284,7 +291,11 @@ public class Main extends JavaPlugin implements Listener {
 
     @EventHandler(priority = EventPriority.NORMAL)
     public void onPlayerInteract(PlayerInteractEvent e) { synchronized(Conf.API_SYNC) { ConfData ref = new ConfData();
-        Action act = e.getAction(); if(act == Action.RIGHT_CLICK_BLOCK && e.getClickedBlock().getBlockData() instanceof WallSign) {
+        Action act = e.getAction();
+
+        // If the block that's right clicked is a wall sign.
+        if (act == Action.RIGHT_CLICK_BLOCK && Objects.requireNonNull(e.getClickedBlock()).getBlockData()
+                instanceof WallSign) {
             if(Conf.isElevSign(e.getClickedBlock(), ref, e.getPlayer(), PERM_USE) && !((Elevator)ref.data).floor.moving) { //Select Floor:
                 Elevator elev = ((Elevator)ref.data); ChuList<Block> dsList = elev.sGroups.get(0);
                 LAST_ELEV = elev;
