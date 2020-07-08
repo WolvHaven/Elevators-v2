@@ -21,6 +21,7 @@ import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitTask;
 
 import java.util.Iterator;
+import java.util.Objects;
 
 public class Main extends JavaPlugin implements Listener {
     static final String PERM_USE    = "elevators.use";
@@ -78,7 +79,8 @@ public class Main extends JavaPlugin implements Listener {
 
     @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
     public void onSignChange(SignChangeEvent e) { synchronized(Conf.API_SYNC) { if(e.getBlock().getBlockData() instanceof WallSign) {
-        if(e.getLine(0).equalsIgnoreCase("[call]") && Conf.hasPerm(e.getPlayer(), PERM_CREATE)) { //Call Sign:
+        if(Objects.requireNonNull(e.getLine(0)).equalsIgnoreCase("[call]")
+                && Conf.hasPerm(e.getPlayer(), PERM_CREATE)) { //Call Sign:
             e.setLine(0, "> ERROR <"); e.setLine(1, ""); e.setLine(2, "");
             Block block = e.getBlock();
 
@@ -94,7 +96,8 @@ public class Main extends JavaPlugin implements Listener {
             elev.updateCallSigns(elev.getLevel());
             e.setLine(0, Conf.CALL); e.setLine(3, elev.csData.get(csNum));
 
-        } else if(e.getLine(0).equalsIgnoreCase("[elevator]") && Conf.hasPerm(e.getPlayer(), PERM_CREATE)) { //Elevator Sign:
+        } else if(Objects.requireNonNull(e.getLine(0)).equalsIgnoreCase("[elevator]")
+                && Conf.hasPerm(e.getPlayer(), PERM_CREATE)) { //Elevator Sign:
             e.setLine(0, "> ERROR <"); e.setLine(1, "");
             Block block = e.getBlock();
 
